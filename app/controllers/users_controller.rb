@@ -15,6 +15,8 @@ class UsersController < ApplicationController
     end
   end
 
+
+
   # GET /users/:id
   def show
     @user = User.find(params[:id])
