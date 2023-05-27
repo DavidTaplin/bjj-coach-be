@@ -2,14 +2,24 @@ class UsersController < ApplicationController
   before_action :authorize_request, except: :create
 
   # POST /signup
+  # def create
+  #   @user = User.new(user_params)
+  #   if @user.save
+  #     payload = {
+  #       email: params[:email],
+  #       password: params[:password],
+  #     }
+  #     render json: { payload: payload, message: "User created successfully" }, status: :created
+  #   else
+  #     render json: @user.errors, status: :unprocessable_entity
+  #   end
+  # end
+
   def create
     @user = User.new(user_params)
     if @user.save
-      payload = {
-        email: params[:email],
-        password: params[:password],
-      }
-      render json: { payload: payload, message: "User created successfully" }, status: :created
+      token = encode_token(@user.id)
+      render json: { user: @user, token: token, message: "User created successfully" }, status: :created
     else
       render json: @user.errors, status: :unprocessable_entity
     end
@@ -40,6 +50,10 @@ class UsersController < ApplicationController
   end
 
   private
+
+  def encode_token(user_id)
+    JWT.encode({ user_id: user_id }, Rails.application.secret_key_base)
+  end
 
   def user_params
     params.permit(:email, :password)
