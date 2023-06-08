@@ -28,13 +28,14 @@ class MovesController < ApplicationController
     end
 
     def destroy
+
         @move.destroy
         head :no_content
       end
 
     private
 
-    def set_move 
+    def set_move
         @move = Move.find(params[:id])
     end
 
