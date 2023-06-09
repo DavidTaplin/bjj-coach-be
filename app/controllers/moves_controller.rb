@@ -28,9 +28,10 @@ class MovesController < ApplicationController
     end
 
     def destroy
-
-        @move.destroy
-        head :no_content
+       if @move.destroy
+        render json: { message: "Move was successfully deleted"}, status: 200
+        else 
+        render json: { error: @move.errors.full_messages }, status: :unprocessable_entity
       end
 
     private
